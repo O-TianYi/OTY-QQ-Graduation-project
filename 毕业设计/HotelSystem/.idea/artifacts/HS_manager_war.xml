@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="HS-manager:war">
+    <output-path>$PROJECT_DIR$/common-parent/HS-manager/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>HS-manager</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="HS-manager.war">
+      <element id="artifact" artifact-name="HS-manager:war exploded" />
+    </root>
+  </artifact>
+</component>

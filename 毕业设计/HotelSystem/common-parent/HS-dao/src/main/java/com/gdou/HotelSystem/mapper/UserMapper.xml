@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.gdou.HotelSystem.mapper.UserMapper">
+
+    <select id="findById" resultType="com.gdou.HotelSystem.User" parameterType="int">
+        SELECT* FROM t_test WHERE id=#{id}
+    </select>
+
+</mapper>

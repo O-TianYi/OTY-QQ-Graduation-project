@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/common-parent/HS-dao/HS-dao.iml" filepath="$PROJECT_DIR$/common-parent/HS-dao/HS-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/HS-manager/HS-manager.iml" filepath="$PROJECT_DIR$/common-parent/HS-manager/HS-manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/HS-model/HS-model.iml" filepath="$PROJECT_DIR$/common-parent/HS-model/HS-model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/HS-service/HS-service.iml" filepath="$PROJECT_DIR$/common-parent/HS-service/HS-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/common-parent.iml" filepath="$PROJECT_DIR$/common-parent/common-parent.iml" />
+    </modules>
+  </component>
+</project>

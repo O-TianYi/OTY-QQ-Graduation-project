@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-4.3.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+    <!-- 自动扫描 -->
+    <context:property-placeholder location="classpath:jdbc.properties" />
+<!--    配置数据源-->
+    <!-- 配置数据源 -->
+    <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="0" />
+        <!-- 连接池最大使用连接数量 -->
+        <property name="maxActive" value="20" />
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="20" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="0" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="60000" />
+
+        <!-- <property name="poolPreparedStatements" value="true" /> <property name="maxPoolPreparedStatementPerConnectionSize" value="33" /> -->
+
+        <property name="validationQuery" value="${validationQuery}" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <property name="testWhileIdle" value="true" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="25200000" />
+
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="true" />
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="1800" />
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="true" />
+
+        <!-- 监控数据库 -->
+        <!-- <property name="filters" value="stat" /> -->
+        <property name="filters" value="mergeStat" />
+    </bean>
+
+
+
+    <!-- myBatis文件,配置sessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <!-- 指定配置文件位置 -->
+<!--        <property name="mapperLocations" value="classpath:com/gdou/HotelSystem/mapper/*.xml" />-->
+<!--        整合mybaties.xml文件-->
+        <property name="typeAliasesPackage" value="com.gdou.HotelSystem.model"></property>
+<!--        胚子加载映射文件UserMapper.xml-->
+        <property name="mapperLocations" value="classpath:com/gdou/HotelSystem/mapper/*Mapper.xml" />
+    </bean>
+    <!--装配dao接口-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--		com.gdou.HotelSystem.mapper，，com.gdou.HotelSystem.HS-dao-->
+        <property name="basePackage" value="com.gdou.HotelSystem.mapper" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+
+    <!--==========================以上内容为applicationContext-dao配置===================================-->
+
+<!--    自动扫描Service-->
+    <context:component-scan base-package="com.gdou.HotelSystem" />
+
+
+
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+<!--    开启事务注解-->
+    <!-- 2、基于半成品，进一步对具体的service层具体的方法进行定制，生成最终的事务管理 器：Advice-->
+    <tx:advice id="txManager" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 如果事务要切入此方法，可以单独为此方法定制事务属性（*代表剩余其他的方法）
+             有关查询的添加属性propagation="SUPPORTS" ：
+                         事务的传播性， 如果已经有事务，则融入这个事务；如果没事务，以非事务环境运行
+              有关增删改的操作增加属性rollback-for="Exception"
+               事务只要出现异常就进行回滚
+             -->
+            <tx:method name="find*" propagation="SUPPORTS"/>
+            <tx:method name="*" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+    <!-- 编织 -->
+    <aop:config>
+        <aop:pointcut expression="execution(* com..controller..*(..))" id="pc"/>
+        <!-- 组装切面 -->
+        <aop:advisor advice-ref="txManager" pointcut-ref="pc"/>
+    </aop:config>
+
+
+</beans>
