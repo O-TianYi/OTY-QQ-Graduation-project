@@ -20,7 +20,7 @@
 
     <!--    公共版本管理-->
     <properties>
-        <junit.version>4.11</junit.version>
+        <junit.version>4.13.1</junit.version>
         <spring.version>4.3.14.RELEASE</spring.version>
         <mybaties.version>3.4.1</mybaties.version>
         <!-- log4j日志文件管理包版本 -->
